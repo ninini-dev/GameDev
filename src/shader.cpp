@@ -21,14 +21,16 @@ string ReadFileContent(const char* filename) {
     
 }
 
-GLuint CreateShader() {
+GLuint CreateShader(const char* vert, const char* frag, const char* geom) {
 
     GLint hasCompiled;
-    string vc = ReadFileContent(R"(res/shaders/default.vert)");
-    string fc = ReadFileContent(R"(res/shaders/default.frag)");
+    string vc = ReadFileContent(vert);
+    string fc = ReadFileContent(frag);
 
     const char* vertexSource = vc.c_str(); 
     const char* fragmentSource = fc.c_str();
+
+    GLuint shaderProgram = glCreateProgram();
 
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexSource, NULL);
@@ -42,7 +44,18 @@ GLuint CreateShader() {
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &hasCompiled);
     std::cout << "FRAG: " << hasCompiled << std::endl;
 
-    GLuint shaderProgram = glCreateProgram();
+
+    GLuint geomShader = 0;
+    if (geom != "") {
+        string gc = ReadFileContent(geom);
+        const char* geomSrc = gc.c_str();
+        GLuint geomShader = glCreateShader(GL_GEOMETRY_SHADER);
+        glShaderSource(geomShader, 1, &geomSrc, NULL);
+        glCompileShader(geomShader);
+        glGetShaderiv(geomShader, GL_COMPILE_STATUS, &hasCompiled);
+        std::cout << "GEOM: " << hasCompiled << std::endl;
+        glAttachShader(shaderProgram, geomShader);
+    }
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
@@ -51,6 +64,7 @@ GLuint CreateShader() {
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+    if(geomShader!=0)glDeleteShader(geomShader);
     return shaderProgram;
 
 };

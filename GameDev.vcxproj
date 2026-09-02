@@ -105,12 +105,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\W10\source\repos\GameDev\GameDev\include;C:\Users\W10\source\repos\GameDev\GameDev\FMOD_API\studio\inc;C:\Users\W10\source\repos\GameDev\GameDev\FMOD_API\core\inc;C:\Users\W10\source\repos\GameDev\GameDev\res</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\W10\source\repos\ninini-dev\GameDev\include;C:\Users\W10\source\repos\ninini-dev\GameDev\FMOD_API\core\inc;C:\Users\W10\source\repos\ninini-dev\GameDev\FMOD_API\studio\inc;C:\Users\W10\source\repos\ninini-dev\GameDev\res;C:\Users\W10\source\repos\ninini-dev\GameDev\include\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\W10\source\repos\GameDev\GameDev\lib;C:\Users\W10\source\repos\GameDev\GameDev\FMOD_API\core\lib\x64;C:\Users\W10\source\repos\GameDev\GameDev\FMOD_API\studio\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\W10\source\repos\ninini-dev\GameDev\lib;C:\Users\W10\source\repos\ninini-dev\GameDev\FMOD_API\core\lib;C:\Users\W10\source\repos\ninini-dev\GameDev\FMOD_API\studio\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3_mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -132,24 +132,74 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\editor\gui_drop.h" />
+    <ClCompile Include="include\editor\gui_path.h" />
+    <ClCompile Include="src\bezier.cpp" />
+    <ClCompile Include="src\bullet.cpp" />
+    <ClCompile Include="src\collision.cpp" />
+    <ClCompile Include="src\editor\gui_core.cpp" />
+    <ClCompile Include="src\editor\gui_drop.cpp" />
+    <ClCompile Include="src\editor\gui_enm.cpp" />
+    <ClCompile Include="src\editor\gui_misc.cpp" />
+    <ClCompile Include="src\editor\gui_path.cpp" />
+    <ClCompile Include="src\editor\gui_pop.cpp" />
+    <ClCompile Include="src\editor\gui_sh.cpp" />
+    <ClCompile Include="src\editor\gui_st.cpp" />
+    <ClCompile Include="src\enemy.cpp" />
+    <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\imgui\imgui.cpp" />
+    <ClCompile Include="src\imgui\imgui_demo.cpp" />
+    <ClCompile Include="src\imgui\imgui_draw.cpp" />
+    <ClCompile Include="src\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\imgui\imgui_tables.cpp" />
+    <ClCompile Include="src\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\item.cpp" />
+    <ClCompile Include="src\laser\laser.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\pl.cpp" />
+    <ClCompile Include="src\random.cpp" />
     <ClCompile Include="src\render.cpp" />
     <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\shooter.cpp" />
+    <ClCompile Include="src\stage.cpp" />
     <ClCompile Include="src\stb.cpp" />
     <ClCompile Include="src\texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\editor\editor.h" />
+    <ClInclude Include="include\editor\gui_enm.h" />
+    <ClInclude Include="include\editor\gui_misc.h" />
+    <ClInclude Include="include\editor\gui_pop.h" />
+    <ClInclude Include="include\editor\gui_sh.h" />
+    <ClInclude Include="include\editor\gui_st.h" />
     <ClInclude Include="include\GLFW\glfw3.h" />
     <ClInclude Include="include\GLFW\glfw3native.h" />
+    <ClInclude Include="include\imgui\imconfig.h" />
+    <ClInclude Include="include\imgui\imgui.h" />
+    <ClInclude Include="include\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="include\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="include\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="include\imgui\imgui_internal.h" />
+    <ClInclude Include="include\imgui\imgui_operations.h" />
+    <ClInclude Include="include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="include\imgui\imstb_textedit.h" />
+    <ClInclude Include="include\imgui\imstb_truetype.h" />
+    <ClInclude Include="include\laserTest\laser.h" />
+    <ClInclude Include="include\own\bezier.h" />
     <ClInclude Include="include\own\bullet.h" />
     <ClInclude Include="include\own\collision.h" />
     <ClInclude Include="include\own\enemy.h" />
     <ClInclude Include="include\own\entity.h" />
+    <ClInclude Include="include\own\item.h" />
     <ClInclude Include="include\own\pl.h" />
+    <ClInclude Include="include\own\random.h" />
     <ClInclude Include="include\own\render.h" />
     <ClInclude Include="include\own\shader.h" />
+    <ClInclude Include="include\own\shooter.h" />
     <ClInclude Include="include\own\sprite.h" />
+    <ClInclude Include="include\own\stage.h" />
     <ClInclude Include="include\own\texture.h" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +207,11 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\sprites\enemy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="notes" />
+    <None Include="res\shaders\default_old\default.frag" />
+    <None Include="res\shaders\default_old\default.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

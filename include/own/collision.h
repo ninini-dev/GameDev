@@ -4,8 +4,6 @@
 #include <glm/vec2.hpp>
 using namespace std;
 using namespace glm;
-unordered_multimap<int, unsigned int> bulletMap = {};
+extern unordered_multimap<int, unsigned int> bulletMapColWEnm, bulletMapColWPl;
 
-int PosToMapIndex(vec2 pos) {
-	return (pos.x * 10) + (pos.y *10) * 100;
-}
+int PosToMapIndex(vec2 pos);

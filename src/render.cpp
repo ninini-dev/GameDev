@@ -8,7 +8,11 @@
 using namespace std;
 
 GLuint VAO, VBO, shaderProgram;
-GLuint TEX_ENM,TEX_BLT,TEX_PL;
+GLuint TEX_ENM,TEX_BLT,TEX_PL, TEX_ITEM;
+
+GLFWwindow* glfwWindow; 
+int vpW;
+int vpH;
 
 const unsigned int MAX_PARTICLES = 100000;
 
@@ -16,11 +20,13 @@ void RenderInitialize() {
 
 	gladLoadGL();
 
-	glViewport(0, 0, 800, 800);
+	glViewport(0, 0,800, 800);
 
 	stbi_set_flip_vertically_on_load(true);
 
-	shaderProgram = CreateShader();
+	//shaderProgram = CreateShader(R"(res/shaders/default_old/default.vert)", R"(res/shaders/default_old/default.frag)", "");
+
+	shaderProgram = CreateShader(R"(res/shaders/default/default.vert)", R"(res/shaders/default/default.frag)", R"(res/shaders/default/default.geom)");
 
 	glGenVertexArrays(1, &VAO);
 
@@ -38,7 +44,6 @@ void RenderInitialize() {
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(4 * sizeof(GLfloat)));
 
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -46,7 +51,8 @@ void RenderInitialize() {
 	TEX_ENM = CreateTexture("res/sprites/enemy.png");
 	TEX_BLT = CreateTexture("res/sprites/etama.png");
 	TEX_PL = CreateTexture("res/sprites/player/pl00/pl00.png");
-	
+	TEX_ITEM = CreateTexture("res/sprites/item.png");
+
 	glUseProgram(shaderProgram);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -64,9 +70,9 @@ void ChangeTexture(GLuint tex, const GLfloat* aspects, const GLfloat* sizes) {
 }
 
 void GLFrame() {
-
-	glClearColor(.07f, .17f, .13f, 1);
+	glClearColor(.07f, .07f, .07f, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
+
 	glUseProgram(shaderProgram);
 	glBindVertexArray(VAO);
 }
@@ -79,13 +85,14 @@ void sub(int index, GLfloat* data) {
 }
 
 void rend(size_t count) {
-	
+	/*
 	glVertexAttribDivisor(0, 1);
 	glVertexAttribDivisor(1, 1);
 	glVertexAttribDivisor(2, 1);
 	glVertexAttribDivisor(3, 1);
-
+	*/
 	GLuint indices[] = {0,1,2,3};
 	
-	glDrawElementsInstanced(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, indices, count);
+	glDrawArrays(GL_POINTS, 0, count);
+	//glDrawElementsInstanced(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, indices, count);
 }

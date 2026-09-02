@@ -1,5 +1,5 @@
-#include <glad/glad.h>
-#include<GLFW/glfw3.h>
+//#include <glad/glad.h>
+//#include<GLFW/glfw3.h>
 #include<glm/vec2.hpp>
 
 #include <stb_image.h>
@@ -15,6 +15,8 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+//#include <own/editor.h>
+
 
 using namespace std;
 using namespace glm;
@@ -47,35 +49,23 @@ using namespace glm;
 }
 */
 
-GLFWwindow* window;
+//GLFWwindow* window;
 
+#include <editor/editor.h>
 void GLFWFrame() {
-	glfwSwapBuffers(window);
+	glfwSwapBuffers(glfwWindow);
 	glfwPollEvents();
 }
 
+//operator glm::vec2() const { return glm::vec2(x, y); }
+
 #include <own/bullet.h>
-void Shoot() {
-	static EnemyAspectTag aspect = TINY_BLUE;
-	static int enemiesCount = 0;
-	
-	//enm.sprite = enemyAspectDictionary[aspect];
-	enemiesCount += 1000;
-	for (size_t i = 0; i < 1000; i++)
-	{
-		float x = static_cast <float>(rand()) / static_cast <float>(RAND_MAX)*2-1;
-		float y = static_cast <float>(rand()) / static_cast <float>(RAND_MAX)*2-1;
-		vector<unsigned int> sh = { 0 };
-		EnemySystem::Add(1, Enemy(vec2(x, y), aspect,sh));
-		/*BulletSystem::Add(2, Bullet(aspectB, color, vec2(x, y), .1, angle));
-		aspectB = (BulletAspect)(((int)aspectB + 1) % ((int)BULLET_ASPECT_COUNT - 1));
-		angle += .1;
-		color = (BulletColorTag)(((int)color + 1) % ((int)BULLET_COLOR_COUNT));*/
-		//EnemySystem::Add(1, Enemy( vec2(x, y), aspect));
-		//aspect = (EnemyAspectTag)(((int)aspect + 1) % ((int)ENEMY_ASPECT_COUNT - 1));
-	}
-}
+#include <own/item.h>
+//up,down,right,left,shift
+bool keysPressed[] = { false, false, false, false,false };
 #include <own/pl.h>
+#include <vector>
+#include <own/stage.h>
 bool simulate() {
 	static auto time_step = 1.0f / 60.0f;
 	static auto lastTime = chrono::steady_clock::now();
@@ -86,26 +76,56 @@ bool simulate() {
 	if ((chrono::duration<double>(currentTime - lastTime).count() >= time_step)) {
 
 		lastTime = chrono::steady_clock::now();
+
+		ImGuiFrame();
 		GLFrame();
 		EnemySystem::Update(time_step);
 		BulletSystem::Update(time_step);
+		ItemSystem::Update(time_step);
+		float dy = (keysPressed[0] - keysPressed[1])*time_step;
+		float dx = (keysPressed[2] - keysPressed[3])*time_step;
+		vec2 dv = vec2(dx, dy);
+		if (keysPressed[4])dv *= .5f;
+		plPos += dv;
+		StageEventLoop(time_step);
 		PlLoop();
-		GLFWFrame(); 
+
+		ImGUILoop();
+		GLFWFrame();
+
 		result = true;
 	}
 	return result;
 }
 void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	
-	if (key == GLFW_KEY_Z && action == GLFW_PRESS) { 
-		
-		
-		Shoot();
+
+	switch (key)
+	{
+	case GLFW_KEY_UP:
+		keysPressed[0] = action > 0;
+		break;
+	case GLFW_KEY_DOWN:
+		keysPressed[1] = action > 0;
+		break;
+	case GLFW_KEY_RIGHT:
+		keysPressed[2] = action > 0;
+		break;
+	case GLFW_KEY_LEFT:
+		keysPressed[3] = action > 0;
+		break;
+	case GLFW_KEY_LEFT_SHIFT:
+		keysPressed[4] = action > 0;
+		break;
+	default:
+		break;
 	}
 }
 int main() {
+
 	EnemySystem::Create();
 	BulletSystem::Create();
+	ItemSystem::Create();
+
 	glfwInit();
 	
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
@@ -113,22 +133,33 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
 
 
-	window=glfwCreateWindow(800,800,"Game",NULL,NULL);
+	glfwWindow =glfwCreateWindow(800,800,"Game",NULL,NULL);
 	
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(glfwWindow);
 
-	glfwSetKeyCallback(window,keyCallBack);
+	glfwSetKeyCallback(glfwWindow,keyCallBack);
 
 	RenderInitialize();
 
-	glfwSwapBuffers(window);
+	glfwSwapBuffers(glfwWindow);
+
+	//IMGUI
+	ImGuiInit(glfwWindow);
 
 	//AudioTest();
-	while (!glfwWindowShouldClose(window)) {
-		if (!simulate())continue;
-	}
+	while (!glfwWindowShouldClose(glfwWindow)) {
+	
+		//ImGui::EndFrame();
 
-	glfwDestroyWindow(window);
+		if (!simulate())continue;
+
+		//ImGui
+
+
+	}
+	ImGuiShutdown();
+
+	glfwDestroyWindow(glfwWindow);
 	glfwTerminate();
 	return 0;
 }
