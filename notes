@@ -1,0 +1,18 @@
+if (ImGui::BeginMenuBar())
+{
+	if (ImGui::BeginMenu("File")) {
+		if (ImGui::MenuItem("Create")) {
+		}
+		if (ImGui::MenuItem("Open", "Ctrl+O")) {
+		}
+		if (ImGui::MenuItem("Save", "Ctrl+S")) {
+		}
+		if (ImGui::MenuItem("Save as..")) {
+		}
+		ImGui::EndMenu();
+	}
+	if (ImGui::BeginMenu("File2")) {
+		ImGui::EndMenu();
+	}
+} ImGui::EndMenuBar();
+	
