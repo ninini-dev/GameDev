@@ -39,8 +39,6 @@ bool gameLoop() {
 	}
 	return 0;
 }
-
-
 int main() {
 
 	GLFWStart();

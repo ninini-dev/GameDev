@@ -1,3 +1,7 @@
+
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 #include <own/glindex.h>
 #include <own/texture.h>
 #include <GLFW/glfw3.h>
@@ -114,6 +118,7 @@ namespace SpriteRender {
 
 		U_SPR = glGetUniformLocation(SHAD, "uSprite");
 
+
 		//================TEXTURE===================
 		SpriteRender::TEX_ETAMA = CreateTexture("res/sprites/etama.png");
 		SpriteRender::TEX_ENM = CreateTexture("res/sprites/enemy.png");
@@ -122,7 +127,6 @@ namespace SpriteRender {
 
 		//================UNBIND===================
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 		glBindVertexArray(0);
 
 
@@ -156,6 +160,9 @@ void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods
 		}
 	}
 }
+
+
+
 void GLFWStart() {
 
 	glfwInit();
@@ -172,9 +179,20 @@ void GLFWStart() {
 
 	rendInit();
 	glfwSwapBuffers(window);
+	//IMGUI
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 460");
 
 }
 void GLFWShutdown() {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
@@ -182,9 +200,18 @@ void GLFrame() {
 
 	glClearColor(.07f, .17f, .13f, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
-}
 
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+}
+#include <editor/editor.h>
+//ImGui::Text("Player Position: (%.2f, %.2f)", pl_x, pl_y);
 void GLFWFrame() {
+	ImGuiLoop();
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 }

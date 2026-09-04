@@ -112,7 +112,7 @@ void drawLaser() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, TEX);
 
-	glMultiDrawArrays(GL_TRIANGLE_STRIP, aFirst, aCount, lr_count * 2);
+	//glMultiDrawArrays(GL_TRIANGLE_STRIP, aFirst, aCount, lr_count * 2);
 
 }
 inline void moveLaser(int i, __m256 m_x, __m256 m_y, __m256 m_dx, __m256 m_dy, __m256 m_s) {

@@ -3,7 +3,7 @@
 //por seguridad hay que mantener los valores multiplos de 8
 #define MAX_BULLET 15000
 #define MAX_LASER 1000
-#define MAX_ENM 1024
+#define MAX_ENM 64
 #define VERTEX_PER_LASER 100
 
 namespace LaserRender {
