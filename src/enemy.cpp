@@ -4,6 +4,8 @@
 #include <immintrin.h>
 #include <own/player.h>
 #include <own/bullet.h>
+#include <own/bezier.h>
+#include <iostream>
 namespace Enemy {
 	float x[MAX_ENM] = {};
 	float y[MAX_ENM] = {};
@@ -12,8 +14,9 @@ namespace Enemy {
 	int sprite[MAX_ENM] = {};
 	int hp[MAX_ENM] = {};
 	int count = 0;
-	float b_x[4] = {};
-	float b_y[4] = {};
+	int path_cur[MAX_ENM] = {};
+	int path_left[MAX_ENM] = {};
+	float path_t[MAX_ENM] = {};
 	
 	//capaz es mejor usar solamente arrays, si hay muchas balas en una misma celda,
 	//puede significar que esta cubierta y puedo ignorar algunas balas.
@@ -33,6 +36,9 @@ void newEnm() {
 	benm_x[count] = x[count];
 	benm_y[count] = y[count];
 	hp[count] = 20;
+	path_cur[count] = 0;
+	path_left[count] = 0;
+	path_t[count] = 0;
 	count++;
 }
 void delete_enm(GLuint id) {
@@ -42,12 +48,13 @@ void delete_enm(GLuint id) {
 	hp[id] = hp[count - 1];
 	benm_x[id] = x[count-1];
 	benm_y[id] = y[count-1];
-
+	path_cur[id] = path_cur[count-1];
+	path_left[id] = path_left[count-1];
+	path_t[id] = path_t[count - 1];
 	count--;
 	//std::cout << count << std::endl;
 }
 
-#include <iostream>
 inline void anim_enemy() {
 	__m256i add_val = _mm256_set1_epi32(0x00010000);
 	__m256i mask_val = _mm256_set1_epi32(0x0003FFFF);
@@ -65,6 +72,7 @@ inline void col_enemy(int i, float* col) {
 	static __m256 m_abs = _mm256_castsi256_ps(_mm256_set1_epi32(0x7FFFFFFF));
 	static __m256 m_chk = _mm256_set1_ps(0.0625);
 
+	if (fabs(x[i])>1.1||fabs(y[i])>1.1)return;
 	int codeX = (int)((x[i] + 1.5f) * 16.0f);
 	int codeY = (int)((y[i] + 1.5f) * 16.0f);
 	int codePos = codeX + codeY * 48;
@@ -80,7 +88,7 @@ inline void col_enemy(int i, float* col) {
 
 			__m256 p_x = _mm256_i32gather_ps(Player::x, vindex, 4); // 4 es sizeof(float)
 			__m256 p_y = _mm256_i32gather_ps(Player::y, vindex, 4);
-
+			
 			__m256 p_dx = _mm256_sub_ps(e_x, p_x);
 			__m256 p_dy = _mm256_sub_ps(e_y, p_y);
 
@@ -184,15 +192,21 @@ float calc_bez(float t,float p[4]) {
 	return p[0] * c * c * c + p[1] * c * c * t * 3.f + p[2] * c * t * t * 3.f + p[3] * t * t * t;
 }
 void move_enemy() {
-	static float t = 0;
-	t += 1.0f / 60.0f;	
+	
+	
 	for (int i = count; i >= 0; i--)
 	{
-		x[i] = benm_x[i] + calc_bez(t, b_x);
-		y[i] = benm_y[i] + calc_bez(t, b_y);
-		if(abs(x[i])>1.3|| abs(y[i]) > 1.3)delete_enm(i);
+		path_t[i] += 1.0f / 60.0f;
+		x[i] = benm_x[i] + calc_bez(path_t[i], enm_global_path_x[path_cur[i]]);
+		y[i] = benm_y[i] + calc_bez(path_t[i], enm_global_path_y[path_cur[i]]);
+	//	if(abs(x[i])>1.3|| abs(y[i]) > 1.3)delete_enm(i);
+
+		if (path_t[i] >= 1) {
+			path_cur[i]++;
+			path_left[i]--;
+			if(path_left[i]<0)delete_enm(i);
+		}
 	}
-	if (t >= 1)t = 0;
 
 }
 void enemyLoop() {

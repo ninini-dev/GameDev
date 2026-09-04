@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\bezier.cpp" />
     <ClCompile Include="src\bullet.cpp" />
     <ClCompile Include="src\editor\bezier_editor.cpp" />
     <ClCompile Include="src\enemy.cpp" />
@@ -161,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\editor\editor.h" />
+    <ClInclude Include="include\own\bezier.h" />
     <ClInclude Include="include\own\enemy.h" />
     <ClInclude Include="include\own\player.h" />
   </ItemGroup>
